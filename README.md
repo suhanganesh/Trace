@@ -211,6 +211,7 @@ Trace/
 ├── backend/app/          # FastAPI + analytics modules
 ├── frontend/             # React dashboard
 ├── docs/                 # Architecture, API, academic notes
+├── run.ps1               # Start backend + frontend (Windows)
 ├── requirements.txt      # Python dependencies
 └── .env.example          # Environment template
 ```
@@ -279,27 +280,53 @@ python scripts/import_analytics_to_mongodb.py --drop
 
 Without `--drop`: import aborts if compact collections already contain data.
 
-### 6. Start API
-
-```powershell
-cd backend
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-### 7. Start frontend
-
-```powershell
-cd frontend
-npm run dev
-```
-
-Open: `http://127.0.0.1:5173`
-
-Ensure `FRONTEND_URL` in root `.env` matches your browser origin (see `.env.example`; CORS allows both `127.0.0.1` and `localhost` for port 5173 when configured from either form).
+When the pipeline is done, start the API and dashboard — see **§16 Running the Application**.
 
 ---
 
-## 16. API Endpoints
+## 16. Running the Application
+
+Use either the launcher or two terminals. Ensure root `.env` has a valid `MONGODB_URI` and `frontend/.env` is set; match `FRONTEND_URL` in root `.env` to your browser origin (see `.env.example`).
+
+### Option 1: Single command
+
+```powershell
+cd C:\Users\xxtri\Desktop\Trace
+.\run.ps1
+```
+
+Starts the backend and frontend in **separate PowerShell windows** (preflight checks, MongoDB ping, health polling). Press **Ctrl+C** in the launcher window to stop both.
+
+### Option 2: Manual commands
+
+**Terminal 1 — Backend**
+
+```powershell
+cd C:\Users\xxtri\Desktop\Trace\backend
+..\.venv\Scripts\Activate.ps1
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+**Terminal 2 — Frontend**
+
+```powershell
+cd C:\Users\xxtri\Desktop\Trace\frontend
+npm run dev
+```
+
+### URLs
+
+- Frontend: `http://127.0.0.1:5173`
+- API health: `http://127.0.0.1:8000/api/health`
+- API documentation: `http://127.0.0.1:8000/docs`
+
+**MongoDB:** Dashboard analytics need a working **MongoDB Atlas** (or other) connection. If `/api/health` reports `disconnected` or endpoints return **503**, check your Atlas cluster, credentials in `.env`, and IP access list.
+
+More detail: `RUN.md`
+
+---
+
+## 17. API Endpoints
 
 | Endpoint | Purpose |
 |----------|---------|
@@ -315,7 +342,7 @@ Ensure `FRONTEND_URL` in root `.env` matches your browser origin (see `.env.exam
 
 ---
 
-## 17. Academic Significance
+## 18. Academic Significance
 
 Trace illustrates a complete **Big Data analytics** workflow: large-file processing, document storage, indexed aggregation, API layer, and visualization— suitable for demonstrating MongoDB as an analytical engine rather than simple CRUD.
 
@@ -326,7 +353,7 @@ Supporting documents:
 
 ---
 
-## 18. Limitations
+## 19. Limitations
 
 - Historical RetailRocket snapshot; not real-time streaming  
 - MongoDB Atlas M0 storage cap — full event/property history stays local, not in cloud DB  
@@ -339,7 +366,7 @@ Supporting documents:
 
 ---
 
-## 19. Future Enhancements
+## 20. Future Enhancements
 
 Possible extensions (not implemented):
 
