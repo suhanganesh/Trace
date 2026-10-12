@@ -1,0 +1,22 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Node.js
+node_modules/
+frontend/node_modules/
+
+# Dataset files
+data/raw/
+data/processed/
+data/mongodb_free_tier/*
+!data/mongodb_free_tier/.gitkeep
